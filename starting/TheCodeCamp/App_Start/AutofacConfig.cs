@@ -8,6 +8,7 @@ using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
 using TheCodeCamp.Data;
+using AutoMapper;
 
 namespace TheCodeCamp
 {
@@ -27,6 +28,15 @@ namespace TheCodeCamp
 
     private static void RegisterServices(ContainerBuilder bldr)
     {
+      var config = new MapperConfiguration(cfg =>
+      {
+          cfg.AddProfile(new CampMappingProfile());
+      });
+
+      bldr.RegisterInstance(config.CreateMapper())
+        .As<IMapper>()
+        .SingleInstance();
+
       bldr.RegisterType<CampContext>()
         .InstancePerRequest();
 
